@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="org.opensixen.p2.P2Installer"
+         point="org.opensixen.osgi.interfaces.ICommand">
+      <command
+            class="org.opensixen.p2.P2Installer"
+            name="install">
+      </command>
+   </extension>
+
+</plugin>
