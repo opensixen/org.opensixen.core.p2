@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.compiere.util.CLogger;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 
@@ -27,7 +26,7 @@ import org.opensixen.osgi.interfaces.ICommand;
 public class P2Installer implements ICommand {
 
 	private CLogger log = CLogger.getCLogger(getClass());
-
+	private IRepositoryManager<IMetadataRepository> metadataManager;
 	public P2Installer() {
 	}
 
@@ -50,41 +49,44 @@ public class P2Installer implements ICommand {
 
 		final IProvisioningAgent agent = (IProvisioningAgent) Activator
 				.getService(IProvisioningAgent.SERVICE_NAME);
-		
+		metadataManager =  (IRepositoryManager<IMetadataRepository>) agent.getService(IMetadataRepositoryManager.SERVICE_NAME);
 		// Añado los repositorios
 		addRepositories(agent, new URI("file:///tmp/monteloeder/"), "Monteloeder Site");
 						
 		P2ProgressMonitor monitor = new P2ProgressMonitor();
 		ProvisioningSession session = new ProvisioningSession(agent);
-
+/*
 		SimpleMetadataRepositoryFactory factory = new SimpleMetadataRepositoryFactory();
 		factory.setAgent(agent);
 		IMetadataRepository repository = factory.load(new URI("file:///tmp/monteloeder/"), 0, new P2ProgressMonitor());
 		
-		/*
+	
 		SimpleArtifactRepositoryFactory artifactFactory = new SimpleArtifactRepositoryFactory();
 		IArtifactRepository artifactRepository = artifactFactory.load(new URI("file:///tmp/monteloeder/"), 0, new P2ProgressMonitor());
-		*/	
+		
 			
-		/*
-		 * IQueryResult<IInstallableUnit> result =
-		 * repository.query(QueryUtil.createIUAnyQuery(), new
-		 * P2ProgressMonitor()); IInstallableUnit[] units =
-		 * result.toArray(IInstallableUnit.class); for (IInstallableUnit unit :
-		 * units) { log.info( unit.getId()); }
-		 * 
-		 * InstallableUnitDescription description = new
-		 * InstallableUnitDescription(); //description.set
-		 * 
-		 * 
-		 * 
-		 * IInstallableUnit instalableUnit =
-		 * MetadataFactory.createInstallableUnit(description);
-		 */
-
+	
+		  IQueryResult<IInstallableUnit> result =
+		  repository.query(QueryUtil.createIUAnyQuery(), new
+		  P2ProgressMonitor()); IInstallableUnit[] units =
+		  result.toArray(IInstallableUnit.class); for (IInstallableUnit unit :
+		  units) { log.info( unit.getId()); }
+		  
+		  InstallableUnitDescription description = new
+		  InstallableUnitDescription(); //description.set
+		  
+		  
+		  
+		  IInstallableUnit instalableUnit =
+		  MetadataFactory.createInstallableUnit(description);
+		
+		
 		IQueryResult<IInstallableUnit> result = repository.query(QueryUtil
 				.createIUQuery("feature.monteloeder.custom.feature.group"),
 				new P2ProgressMonitor());
+		
+		
+		
 		ArrayList<IInstallableUnit> iu = new ArrayList<IInstallableUnit>();
 		iu.addAll(result.toUnmodifiableSet());
 
@@ -101,7 +103,7 @@ public class P2Installer implements ICommand {
 			log.info("Resultado distinto de OK");
 			log.info("Mensaje: " + op.getResolutionDetails());
 		}
-
+	*/
 		return "";
 
 	}
@@ -120,8 +122,7 @@ public class P2Installer implements ICommand {
 			addToSelf(agent, agentLocation, event);
 		return Status.OK_STATUS;
 	*/
-		
-		IRepositoryManager<IMetadataRepository> metadataManager =  (IRepositoryManager<IMetadataRepository>) agent.getService(IMetadataRepositoryManager.SERVICE_NAME);
+				
 		if (!metadataManager.contains(location))	{
 			metadataManager.addRepository(location);
 			if (name != null)	{
