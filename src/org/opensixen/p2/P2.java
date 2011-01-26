@@ -155,7 +155,8 @@ public class P2 {
 	 * @param name
 	 */
 	public void removeRepository(URI location) {
-		if (!metadataManager.contains(location)) {
+
+		if (metadataManager.contains(location)) {
 			metadataManager.removeRepository(location);
 		}
 
