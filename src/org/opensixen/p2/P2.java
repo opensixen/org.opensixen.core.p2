@@ -161,7 +161,7 @@ public class P2 {
 		}
 
 		IRepositoryManager<IArtifactRepository> artifactManager = (IRepositoryManager<IArtifactRepository>) agent.getService(IArtifactRepositoryManager.SERVICE_NAME);
-		if (!artifactManager.contains(location)) {
+		if (artifactManager.contains(location)) {
 			artifactManager.removeRepository(location);
 		}
 	}
@@ -181,7 +181,7 @@ public class P2 {
 		RepositoryModel[] model = new RepositoryModel[locations.length];
 		for (int i = 0; i < locations.length; i++) {
 			String name = metadataManager.getRepositoryProperty(locations[i],
-					IMetadataRepository.PROP_NAME);
+					IMetadataRepository.PROP_NICKNAME);
 			model[i] = new RepositoryModel(name, locations[i]);
 		}
 		return model;
