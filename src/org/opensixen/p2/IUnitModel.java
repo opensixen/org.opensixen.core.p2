@@ -66,7 +66,9 @@ import java.net.URI;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 
 /**
- * 
+ * Installable Unit model.
+ * Encapsulate information about IU availables in repositories 
+ * or installed in current container.
  * 
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
@@ -86,6 +88,11 @@ public class IUnitModel {
 		this.installableUnit = installableUnit;
 	}
 
+	public IUnitModel(IInstallableUnit installableUnit) {
+		super();
+		this.installableUnit = installableUnit;
+	}
+	
 	public IUnitModel() {
 		super();
 	}

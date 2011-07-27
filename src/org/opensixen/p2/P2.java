@@ -74,6 +74,8 @@ import org.eclipse.equinox.internal.p2.engine.ProfileMetadataRepositoryFactory;
 import org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.core.ProvisionException;
+import org.eclipse.equinox.p2.engine.IProfile;
+import org.eclipse.equinox.p2.engine.IProfileRegistry;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.operations.InstallOperation;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
@@ -255,8 +257,38 @@ public class P2 {
 		for (IUnitModel iunit : iunits) {
 			installableUnits.add(iunit.getInstallableUnit());
 		}
-
 		return install(installableUnits, new P2ProgressMonitor());
 	}
+	
+	/**
+	 * Return all installed IU from all profiles
+	 * @return
+	 */
+	public List<IInstallableUnit> getInstalled()	{
+		ArrayList<IInstallableUnit> iunits = new ArrayList<IInstallableUnit>();
+		IProfileRegistry profileRegistry = (IProfileRegistry) agent.getService(IProfileRegistry.SERVICE_NAME);
+		IProfile[] profiles = profileRegistry.getProfiles();
+		for (int i=0; i < profiles.length; i++)	{
+			IQueryResult<IInstallableUnit> result = profiles[i].available(QueryUtil.createIUGroupQuery(), null);
+			IInstallableUnit[] units = result.toArray(IInstallableUnit.class);
+			for (IInstallableUnit installableUnit : units) {
+				iunits.add(installableUnit);
+			}		
+		}
+		return iunits;
+	}
 
+	/**
+	 * Return all installed IU from all profiles
+	 * as IUnitModel list
+	 * @return
+	 */
+	public List<IUnitModel> getInstalledModel()	{
+		ArrayList<IUnitModel> models = new ArrayList<IUnitModel>(); 
+		List<IInstallableUnit> installed = getInstalled();
+		for (IInstallableUnit unit:installed)	{
+			models.add(new IUnitModel(unit));
+		}
+		return models;
+	}
 }

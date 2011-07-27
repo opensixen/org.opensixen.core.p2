@@ -61,12 +61,15 @@
 
 package org.opensixen.p2;
 
+import java.util.List;
+
 import org.compiere.util.CLogger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
+import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
@@ -116,7 +119,9 @@ public class P2Updater {
 		// running profile, using the default profile root marker. To change
 		// which installable units are being updated, use the more detailed
 		// constructors.
-		UpdateOperation operation = new UpdateOperation(session);
+		//UpdateOperation operation = new UpdateOperation(session);
+		List<IInstallableUnit> toBeUpdated = P2.get().getInstalled();
+		UpdateOperation operation = new UpdateOperation(session, toBeUpdated);
 		SubMonitor sub = SubMonitor.convert(monitor,
 				"Checking for application updates...", 200);
 		IStatus status = operation.resolveModal(sub.newChild(100));
