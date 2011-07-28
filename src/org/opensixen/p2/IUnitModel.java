@@ -74,7 +74,7 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
  * Indeos Consultoria http://www.indeos.es
  *
  */
-public class IUnitModel {
+public class IUnitModel{
 	
 	private URI location;
 	

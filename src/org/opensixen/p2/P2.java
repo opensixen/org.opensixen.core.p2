@@ -61,6 +61,7 @@
 
 package org.opensixen.p2;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -71,9 +72,13 @@ import org.compiere.util.CLogger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.equinox.internal.p2.engine.ProfileMetadataRepositoryFactory;
+import org.eclipse.equinox.internal.p2.engine.SimpleProfileRegistry;
 import org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory;
+import org.eclipse.equinox.internal.provisional.p2.core.eventbus.IProvisioningEventBus;
+import org.eclipse.equinox.p2.core.IAgentLocation;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.core.ProvisionException;
+import org.eclipse.equinox.p2.engine.CustomProfileRegistry;
 import org.eclipse.equinox.p2.engine.IProfile;
 import org.eclipse.equinox.p2.engine.IProfileRegistry;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
@@ -267,6 +272,9 @@ public class P2 {
 	public List<IInstallableUnit> getInstalled()	{
 		ArrayList<IInstallableUnit> iunits = new ArrayList<IInstallableUnit>();
 		IProfileRegistry profileRegistry = (IProfileRegistry) agent.getService(IProfileRegistry.SERVICE_NAME);
+		if (profileRegistry == null)	{
+			return iunits;
+		}
 		IProfile[] profiles = profileRegistry.getProfiles();
 		for (int i=0; i < profiles.length; i++)	{
 			IQueryResult<IInstallableUnit> result = profiles[i].available(QueryUtil.createIUGroupQuery(), null);
@@ -284,11 +292,34 @@ public class P2 {
 	 * @return
 	 */
 	public List<IUnitModel> getInstalledModel()	{
+		System.out.print(debug());
+		
 		ArrayList<IUnitModel> models = new ArrayList<IUnitModel>(); 
 		List<IInstallableUnit> installed = getInstalled();
 		for (IInstallableUnit unit:installed)	{
 			models.add(new IUnitModel(unit));
 		}
 		return models;
+	}
+		
+	public String debug()	{
+		StringBuffer buffer = new StringBuffer();
+		
+		IAgentLocation location = (IAgentLocation) agent.getService(IAgentLocation.SERVICE_NAME);
+		if (location != null)	{
+			buffer.append(location.getRootLocation().toString()).append("\n");			
+		}
+		else {
+			return "No se ha encontrado IAgentLocation";
+		}
+		
+		IProfileRegistry profileRegistry = (IProfileRegistry) agent.getService(IProfileRegistry.SERVICE_NAME);
+		if (profileRegistry != null)	{
+			buffer.append(profileRegistry.toString());			
+		}
+		else {
+			buffer.append("No se ha encontrado profileRegistry");
+		}
+		return buffer.toString();
 	}
 }
