@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.p2.repository;bundle-version="2.0.0",
  org.eclipse.equinox.p2.metadata.repository;bundle-version="1.1.0",
  org.opensixen.base;bundle-version="1.0.0",
- org.opensixen.core.common;bundle-version="1.0.0"
+ org.opensixen.core.common;bundle-version="1.0.0",
+ org.eclipse.core.net;bundle-version="1.2.100"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.opensixen.p2
