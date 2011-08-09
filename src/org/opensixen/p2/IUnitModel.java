@@ -149,6 +149,12 @@ public class IUnitModel{
 		return installableUnit.getProperty(IInstallableUnit.PROP_DESCRIPTION);
 	}
 	
-	
+	public String getVersion()	{
+		return installableUnit.getVersion().toString();
+	}
 
+	
+	public String getID()	{
+		return installableUnit.getId();
+	}
 }

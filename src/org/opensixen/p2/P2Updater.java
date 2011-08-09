@@ -141,7 +141,8 @@ public class P2Updater {
 				return status;
 			}
 			
-			status = job.runModal(sub.newChild(100));
+			//status = job.runModal(sub.newChild(100));
+			status = job.run(sub.newChild(100));
 			if (status.getSeverity() == IStatus.CANCEL)
 				throw new OperationCanceledException();
 		}
